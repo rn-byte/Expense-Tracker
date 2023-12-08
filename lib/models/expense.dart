@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
+
+final formatter = DateFormat.yMd();
 
 const uuid = Uuid();
 
@@ -10,6 +14,13 @@ enum Category {
   leisure,
   work,
 }
+
+const categoryIcons = {
+  Category.food: Icons.lunch_dining_rounded,
+  Category.leisure: Icons.movie_rounded,
+  Category.travel: Icons.travel_explore_rounded,
+  Category.work: Icons.work_history_rounded
+};
 
 class Expense {
   Expense({
@@ -25,4 +36,12 @@ class Expense {
   final double amount;
   final DateTime date;
   final Category category;
+
+  // "Getters" are basically "computed properties" => Properties thet are
+  // dynamically derived, based on other class properties.
+  // For formatting the 'DATE' we use third party package named "intl"
+
+  String get formattedDate {
+    return formatter.format(date);
+  }
 }
