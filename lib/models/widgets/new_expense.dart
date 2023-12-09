@@ -23,11 +23,13 @@ class _NewExpenseState extends State<NewExpense> {
   final _titleController = TextEditingController();
 
   //When we create TextEditingController here, we also have to tell flutter
-  // to delete that controller whent the widget is not needed anymore
+  // to delete that controller whent the widget is not needed anymore and for
+  // that we add method dispose herer
 
   @override
   void dispose() {
     _titleController.dispose();
+    // Here we tell flutter that this controller is not needed anymore
     super.dispose();
   }
 
@@ -46,7 +48,10 @@ class _NewExpenseState extends State<NewExpense> {
             // value in that TextField Changes
 
             //Getting input on every keystroke
-            onChanged: _saveTitleInput,
+            //onChanged: _saveTitleInput,
+
+            // for 2nd approach
+            controller: _titleController,
             maxLength: 50,
             // for adding label, we use decoration
             decoration: const InputDecoration(
@@ -64,7 +69,7 @@ class _NewExpenseState extends State<NewExpense> {
               // ),
               ElevatedButton(
                 onPressed: () {
-                  print(_enteredTitle);
+                  print(_titleController.text);
                 },
                 child: const Text("Save Expense"),
               )
