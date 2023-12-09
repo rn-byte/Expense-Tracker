@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -9,6 +10,20 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
+  DateTime? _selectedDate;
+  // DatePicker for IconButton
+  void _presentDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+    final pickedDate = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+    setState(() {
+      _selectedDate = pickedDate;
+    });
+  }
   //Storing the value entered by the user from TextField
   // 1st approach
   // var _enteredTitle = "";
@@ -21,6 +36,7 @@ class _NewExpenseState extends State<NewExpense> {
 // an object for handling user input
 
   final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
 
   //When we create TextEditingController here, we also have to tell flutter
   // to delete that controller whent the widget is not needed anymore and for
@@ -29,6 +45,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   void dispose() {
     _titleController.dispose();
+    _amountController.dispose();
     // Here we tell flutter that this controller is not needed anymore
     super.dispose();
   }
@@ -39,7 +56,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(25),
       child: Column(
         children: [
           TextField(
@@ -58,18 +75,67 @@ class _NewExpenseState extends State<NewExpense> {
               label: Text("Title"),
             ),
           ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    prefixText: 'Rs. ',
+                    label: Text("Amount"),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      _selectedDate == null
+                          ? "Select Date"
+                          : formatter.format(_selectedDate!),
+                    ),
+                    // Here "!" sign to basically force DART to assume
+                    // that _selectedDate won't be null
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    IconButton(
+                      onPressed: _presentDatePicker,
+                      icon: const Icon(Icons.calendar_month),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 25,
+          ),
           Row(
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  // for closing the ModelBottomSheet
+                  Navigator.pop(context);
+                },
                 child: const Text("Cancel"),
               ),
-              // const SizedBox(
-              //   width: 100,
-              // ),
+              const SizedBox(
+                width: 10,
+              ),
               ElevatedButton(
                 onPressed: () {
                   print(_titleController.text);
+                  print(_amountController.text);
                 },
                 child: const Text("Save Expense"),
               )
