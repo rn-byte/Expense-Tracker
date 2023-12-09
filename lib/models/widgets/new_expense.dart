@@ -11,10 +11,28 @@ class NewExpense extends StatefulWidget {
 class _NewExpenseState extends State<NewExpense> {
   //Storing the value entered by the user from TextField
   // 1st approach
-  var _enteredTitle = "";
-  void _saveTitleInput(String inputValue) {
-    _enteredTitle = inputValue;
+  // var _enteredTitle = "";
+  // void _saveTitleInput(String inputValue) {
+  //   _enteredTitle = inputValue;
+  // }
+
+  //2nd Approach
+// "TextEditingController()" is the class provided by flutter which creates
+// an object for handling user input
+
+  final _titleController = TextEditingController();
+
+  //When we create TextEditingController here, we also have to tell flutter
+  // to delete that controller whent the widget is not needed anymore
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
   }
+
+  //Only "State" classes can implement this "dispose" method
+  // (StatelessWidget can't). That's also why you must use a StatefulWidget here
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +55,13 @@ class _NewExpenseState extends State<NewExpense> {
           ),
           Row(
             children: [
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text("Cancel"),
+              ),
+              // const SizedBox(
+              //   width: 100,
+              // ),
               ElevatedButton(
                 onPressed: () {
                   print(_enteredTitle);
