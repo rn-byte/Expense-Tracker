@@ -10,6 +10,10 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
+  // For dropdownButtonList
+  Category? _selectedCategory;
+  //Category _selectedCategory = Category.leisure;
+
   DateTime? _selectedDate;
   // DatePicker for IconButton
   void _presentDatePicker() async {
@@ -122,6 +126,28 @@ class _NewExpenseState extends State<NewExpense> {
           ),
           Row(
             children: [
+              DropdownButton(
+                  hint: const Text("Select Category"),
+                  value: _selectedCategory,
+                  items: Category.values
+                      .map(
+                        (category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(
+                            category.name.toUpperCase(),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  }),
+              const Spacer(),
               ElevatedButton(
                 onPressed: () {
                   // for closing the ModelBottomSheet
