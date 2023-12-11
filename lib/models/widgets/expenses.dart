@@ -37,12 +37,28 @@ class _ExpensesState extends State<Expenses> {
     // so this context value which we get below here holds information about the
     // upper expenses widget in the end and its position n the widget tree.
     showModalBottomSheet(
+      // The modelOverlay will take the full availabel Height
+      isScrollControlled: true,
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(onAddExpense: _addExpenses),
     );
     //  'ctx' is now the context object for the model element that's created
     // by flutter
   }
+
+  // Adding Expenses start-----------//
+  void _addExpenses(Expense expense) {
+    setState(() {
+      _registeredExpense.add(expense);
+    });
+  }
+  //Adding Expenses end--------------//
+
+  //Removing Expenses start--------------//
+  void _removeExpenses(Expense expense) {
+    _registeredExpense.remove(expense);
+  }
+  //Removing Expenses end--------------//
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +75,12 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           const Text("The Chart"),
-          Expanded(child: ExpensesList(expenses: _registeredExpense)),
+          Expanded(
+            child: ExpensesList(
+              expenses: _registeredExpense,
+              onRemoveExpense: _removeExpenses,
+            ),
+          ),
         ],
       ),
     );
