@@ -18,7 +18,7 @@ enum Category {
 const categoryIcons = {
   Category.food: Icons.lunch_dining_rounded,
   Category.leisure: Icons.movie_rounded,
-  Category.travel: Icons.travel_explore_rounded,
+  Category.travel: Icons.bus_alert_rounded,
   Category.work: Icons.work_history_rounded
 };
 

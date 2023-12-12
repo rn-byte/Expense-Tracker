@@ -56,12 +56,24 @@ class _ExpensesState extends State<Expenses> {
 
   //Removing Expenses start--------------//
   void _removeExpenses(Expense expense) {
-    _registeredExpense.remove(expense);
+    setState(() {
+      _registeredExpense.remove(expense);
+    });
   }
   //Removing Expenses end--------------//
 
   @override
   Widget build(BuildContext context) {
+    Widget mainContent = const Center(
+      child: Text("No expenses found. Start Adding Some !"),
+    );
+
+    if (_registeredExpense.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpense,
+        onRemoveExpense: _removeExpenses,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expenses Tracker'),
@@ -76,10 +88,7 @@ class _ExpensesState extends State<Expenses> {
         children: [
           const Text("The Chart"),
           Expanded(
-            child: ExpensesList(
-              expenses: _registeredExpense,
-              onRemoveExpense: _removeExpenses,
-            ),
+            child: mainContent,
           ),
         ],
       ),
