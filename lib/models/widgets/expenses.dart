@@ -56,9 +56,26 @@ class _ExpensesState extends State<Expenses> {
 
   //Removing Expenses start--------------//
   void _removeExpenses(Expense expense) {
+    final expenseIndex = _registeredExpense.indexOf(expense);
     setState(() {
       _registeredExpense.remove(expense);
     });
+
+    // for Displaying message of undoing after deleting , show that we can
+    // undo the actions. For that we use ScaffoldMessenger and snackbar .
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 5),
+        content: const Text("Expense Deleted"),
+        action: SnackBarAction(
+            label: "Undo",
+            onPressed: () {
+              setState(() {
+                _registeredExpense.insert(expenseIndex, expense);
+              });
+            }),
+      ),
+    );
   }
   //Removing Expenses end--------------//
 
