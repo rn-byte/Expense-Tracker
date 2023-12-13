@@ -20,6 +20,12 @@ class ExpensesList extends StatelessWidget {
       // 'Dismissible' which we can wrap around list items that should
       // be swipeable or that should be dismissible
       itemBuilder: ((context, index) => Dismissible(
+            background: Container(
+              color: Theme.of(context).colorScheme.error.withOpacity(0.75),
+              margin: EdgeInsets.symmetric(
+                horizontal: Theme.of(context).cardTheme.margin!.horizontal,
+              ),
+            ),
             onDismissed: (direction) {
               onRemoveExpense(expenses[index]);
             },
