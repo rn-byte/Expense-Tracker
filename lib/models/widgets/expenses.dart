@@ -63,6 +63,8 @@ class _ExpensesState extends State<Expenses> {
 
     // for Displaying message of undoing after deleting , show that we can
     // undo the actions. For that we use ScaffoldMessenger and snackbar .
+    ScaffoldMessenger.of(context).clearSnackBars();
+    // for clearing the 1st snackBar before the appreance of 2nd
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 5),
