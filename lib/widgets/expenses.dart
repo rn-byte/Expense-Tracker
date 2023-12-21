@@ -39,6 +39,7 @@ class _ExpensesState extends State<Expenses> {
     // upper expenses widget in the end and its position n the widget tree.
     showModalBottomSheet(
       // The modelOverlay will take the full availabel Height
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(onAddExpense: _addExpenses),

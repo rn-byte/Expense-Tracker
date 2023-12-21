@@ -103,113 +103,157 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            // 1st approach : Add onChanged parameter to TextField which allows
-            // us to register a function that will be triggered whenever the
-            // value in that TextField Changes
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    return LayoutBuilder(builder: (ctx, constraints) {
+      // print("minWidth ${constraints.minWidth}");
+      // print("maxWidth ${constraints.maxWidth}");
+      // print("minHeight ${constraints.minHeight}");
+      // print("maxHeight ${constraints.maxHeight}");
 
-            //Getting input on every keystroke
-            //onChanged: _saveTitleInput,
+      final width = constraints.maxWidth;
+      return SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
+            child: Column(
+              children: [
+                if (width >= 600)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _titleController,
+                          maxLength: 50,
+                          // for adding label, we use decoration
+                          decoration: const InputDecoration(
+                            label: Text("Title"),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            prefixText: 'Rs. ',
+                            label: Text("Amount"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  TextField(
+                    // 1st approach : Add onChanged parameter to TextField which allows
+                    // us to register a function that will be triggered whenever the
+                    // value in that TextField Changes
 
-            // for 2nd approach
-            controller: _titleController,
-            maxLength: 50,
-            // for adding label, we use decoration
-            decoration: const InputDecoration(
-              label: Text("Title"),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    prefixText: 'Rs. ',
-                    label: Text("Amount"),
+                    //Getting input on every keystroke
+                    //onChanged: _saveTitleInput,
+
+                    // for 2nd approach
+                    controller: _titleController,
+                    maxLength: 50,
+                    // for adding label, we use decoration
+                    decoration: const InputDecoration(
+                      label: Text("Title"),
+                    ),
                   ),
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              const SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
+                Row(
                   children: [
-                    Text(
-                      _selectedDate == null
-                          ? "Select Date"
-                          : formatter.format(_selectedDate!),
+                    Expanded(
+                      child: TextField(
+                        controller: _amountController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          prefixText: 'Rs. ',
+                          label: Text("Amount"),
+                        ),
+                      ),
                     ),
-                    // Here "!" sign to basically force DART to assume
-                    // that _selectedDate won't be null
                     const SizedBox(
-                      width: 5,
+                      width: 16,
                     ),
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: const Icon(Icons.calendar_month),
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            _selectedDate == null
+                                ? "Select Date"
+                                : formatter.format(_selectedDate!),
+                          ),
+                          // Here "!" sign to basically force DART to assume
+                          // that _selectedDate won't be null
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          IconButton(
+                            onPressed: _presentDatePicker,
+                            icon: const Icon(Icons.calendar_month),
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),
-              )
-            ],
+                const SizedBox(
+                  height: 25,
+                ),
+                Row(
+                  children: [
+                    DropdownButton(
+                        hint: const Text("Select Category"),
+                        value: _selectedCategory,
+                        items: Category.values
+                            .map(
+                              (category) => DropdownMenuItem(
+                                value: category,
+                                child: Text(
+                                  category.name.toUpperCase(),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        }),
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: () {
+                        // for closing the ModelBottomSheet
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: _submitExpenseData,
+                      child: const Text("Save Expense"),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
-          const SizedBox(
-            height: 25,
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                  hint: const Text("Select Category"),
-                  value: _selectedCategory,
-                  items: Category.values
-                      .map(
-                        (category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(
-                            category.name.toUpperCase(),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    }
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  // for closing the ModelBottomSheet
-                  Navigator.pop(context);
-                },
-                child: const Text("Cancel"),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              ElevatedButton(
-                onPressed: _submitExpenseData,
-                child: const Text("Save Expense"),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
